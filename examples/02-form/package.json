@@ -9,6 +9,7 @@
   "author": "Jas Chen",
   "license": "MIT",
   "dependencies": {
+    "elm-architecture": "^0.1.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "rxjs": "^5.0.0-rc.1",

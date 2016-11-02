@@ -13,7 +13,7 @@ module.exports = {
   devServer: { inline: true },
   resolve: {
     alias: {
-      'elm-architecture': path.resolve(__dirname, '../../src')
+      // 'elm-architecture': path.resolve(__dirname, '../../src')
     }
   }
 };

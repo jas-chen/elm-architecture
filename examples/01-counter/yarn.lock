@@ -555,6 +555,10 @@ elliptic@^6.0.0:
     hash.js "^1.0.0"
     inherits "^2.0.1"
 
+elm-architecture:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/elm-architecture/-/elm-architecture-0.1.0.tgz#3b75736e9ffda32f8cd66ca88c62dd8f3b92159b"
+
 emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
