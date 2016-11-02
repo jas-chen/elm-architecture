@@ -555,9 +555,11 @@ elliptic@^6.0.0:
     hash.js "^1.0.0"
     inherits "^2.0.1"
 
-elm-architecture:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/elm-architecture/-/elm-architecture-0.1.0.tgz#3b75736e9ffda32f8cd66ca88c62dd8f3b92159b"
+elm-architecture@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/elm-architecture/-/elm-architecture-0.2.0.tgz#0c72e521967e23b3bb9a450d9c11d9041a816b35"
+  dependencies:
+    rxjs "^5.0.0-rc.1"
 
 emojis-list@^2.0.0:
   version "2.1.0"
@@ -1777,7 +1779,7 @@ ripemd160@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-1.0.1.tgz#93a4bbd4942bc574b69a8fa57c71de10ecca7d6e"
 
-rxjs:
+rxjs@^5.0.0-rc.1:
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.0-rc.1.tgz#9e02b7044da81a2d5e138908d22af77e22d96973"
   dependencies:
