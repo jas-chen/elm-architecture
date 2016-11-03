@@ -1,7 +1,7 @@
 import { bindMsg } from 'elm-architecture';
 import { createElement as h } from 'react';
 
-export default {
+export const main = {
   init: init(),
   update,
   view

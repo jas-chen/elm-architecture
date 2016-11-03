@@ -1,6 +1,6 @@
 import { createElement as h } from 'react';
 
-export default {
+export const main = {
   init: init('cats'),
   update,
   view

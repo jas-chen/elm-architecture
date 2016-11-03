@@ -1,6 +1,6 @@
 import { run } from 'elm-architecture';
 import ReactDom from 'react-dom';
-import program from './program';
+import * as program from './program';
 
 function reactDomRender(mountNode) {
   return vdom => ReactDom.render(vdom, mountNode);

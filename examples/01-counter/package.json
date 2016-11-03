@@ -1,6 +1,6 @@
 {
   "name": "01-counter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Counter example",
   "scripts": {
     "dev": "webpack-dev-server --inline --content-base .",
@@ -9,7 +9,7 @@
   "author": "Jas Chen",
   "license": "MIT",
   "dependencies": {
-    "elm-architecture": "0.2.0",
+    "elm-architecture": "0.3.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   },
