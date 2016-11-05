@@ -67,7 +67,7 @@ export function run(program, render, opt = {}) {
 
     let newModel = update(msg, model), sideEffect;
     if (typeof newModel === 'undefined') {
-      throw new Error(`Unhandled msg: ${JSON.stringify(msg)}`);
+      throw new Error(`Unhandled msg ${msg.constructor.name} ${JSON.stringify(msg)}`);
     }
 
     if (Array.isArray(newModel) && typeof newModel[1] === 'function') {
