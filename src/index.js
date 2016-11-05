@@ -85,3 +85,14 @@ export function run(program, render, opt = {}) {
     sideEffect && sideEffect(dispatch);
   }
 }
+
+
+export function caseOf(msg, ...params) {
+  for (let i = 0; i < params.length ; i += 2) {
+    const Msg = params[i];
+    const update = params[i + 1];
+    if (msg.constructor === Msg) {
+      return update(...msg.args);
+    }
+  }
+}
