@@ -1,5 +1,11 @@
+import $$observable from 'symbol-observable';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { map } from 'rxjs/operator/map';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/map';
 
 function isEvent(e) {
   return e && e.preventDefault && e.stopPropagation;
@@ -12,7 +18,7 @@ export function run(program, render, opt = {}) {
   const { init, view, update, subscriptions } = program.main;
   const { onUpdate } = opt;
   // Use requestAnimationFrame for better render performance
-  let rafVal;
+  let initModel = init, rafVal, sideEffect;
   const rafRender = hasRaf
     ? vdom => {
       hasCraf && rafVal && window.cancelAnimationFrame(rafVal);
@@ -20,30 +26,59 @@ export function run(program, render, opt = {}) {
     }
     : render;
 
-  const model$ = new Subject();
-  let model = init, initSideEffect, view$;
+  const msg$ = new Subject();
+  const platform = {
+    cmd: msg$.next.bind(msg$),
+    subscribe: msg$.subscribe.bind(msg$),
+    complete: msg$.complete.bind(msg$),
+    [$$observable]() {
+      return platform;
+    }
+  };
 
-  if (Array.isArray(model) && typeof model[1] === 'function') {
-    initSideEffect = model[1];
-    model = model[0];
-  }
+  platform.sub = platform.subscribe;
 
-  if (typeof model === 'undefined') {
+  if (typeof initModel === 'undefined') {
     throw new Error('Initial model is undefined. Pass null to explicitly set `no value`.');
   }
 
-  view$ = view(dispatch, model$);
+  if (Array.isArray(initModel) && typeof initModel[1] === 'function') {
+    sideEffect = initModel[1];
+    initModel = initModel[0];
+  }
+
+  const model$ = msg$
+    .startWith(initModel)
+    .scan((model, msg) => {
+      let newModel = update(msg, model);
+
+      if (typeof newModel === 'undefined') {
+        throw new Error(`Unhandled msg ${msg.constructor.name} ${JSON.stringify(msg)}`);
+      }
+
+      if (Array.isArray(newModel) && typeof newModel[1] === 'function') {
+        sideEffect = newModel[1];
+        newModel = newModel[0];
+      }
+
+      onUpdate && onUpdate(msg, model, newModel);
+
+      return newModel;
+    })
+    ._do(() => {
+      sideEffect && sideEffect(platform);
+      sideEffect = null;
+    })
+    .share();
+
+  let view$ = view(dispatch, model$);
   if (typeof view$ === 'function') {
-    view$ = map.call(model$, view$);
+    view$ = model$.map(view$);
   }
 
   view$.subscribe(rafRender);
-  model$.next(model);
 
-  initSideEffect && initSideEffect(dispatch);
-  initSideEffect = null;
-
-  subscriptions && subscriptions(dispatch, model);
+  subscriptions && subscriptions(platform, initModel);
 
   function dispatch(msg, ...args) {
     if (typeof msg === 'function') {
@@ -51,39 +86,23 @@ export function run(program, render, opt = {}) {
         if (isEvent(e)) {
           const { type, target } = e;
           if (type === 'change' && target.tagName === 'INPUT' && (target.type === 'radio' || target.type === 'checkbox')) {
-            dispatch(new msg(...args, target.checked));
+            msg$.next(new msg(...args, target.checked));
           } else {
-            dispatch(new msg(...args, target.value));
+            msg$.next(new msg(...args, target.value));
           }
         } else {
-          dispatch(new msg(...args));
+          msg$.next(new msg(...args));
         }
       }
     }
 
-    if (typeof msg !== 'object') {
-      throw new Error(`Expected msg to be an object: ${JSON.stringify(msg)}`);
-    }
-
-    let newModel = update(msg, model), sideEffect;
-    if (typeof newModel === 'undefined') {
-      throw new Error(`Unhandled msg ${msg.constructor.name} ${JSON.stringify(msg)}`);
-    }
-
-    if (Array.isArray(newModel) && typeof newModel[1] === 'function') {
-      sideEffect = newModel[1];
-      newModel = newModel[0];
-    }
-
-    onUpdate && onUpdate(msg, model, newModel);
-
-    if (newModel !== model) {
-      model = newModel;
-      model$.next(model);
-    }
-
-    sideEffect && sideEffect(dispatch);
+    msg$.next(msg);
   }
+
+  return {
+    platform,
+    model$
+  };
 }
 
 
