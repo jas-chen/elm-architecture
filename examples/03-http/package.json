@@ -1,15 +1,16 @@
 {
   "name": "03-http",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Http example",
   "scripts": {
-    "dev": "webpack-dev-server --inline --content-base .",
+    "start": "webpack-dev-server --inline --content-base .",
+    "dev": "webpack-dev-server --config webpack.config.dev.js --inline --content-base .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jas Chen",
   "license": "MIT",
   "dependencies": {
-    "elm-architecture": "0.3.2",
+    "elm-architecture": "0.4.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   },

@@ -54,10 +54,10 @@ function view(d) {
 
 // HTTP
 function getRandomGif(topic) {
-  return dispatch => {
+  return platform => {
     fetch(`http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${topic}`)
       .then(response => response.json())
-      .then(json => dispatch(new FetchSucceed(json.data.image_url)))
-      .catch(error => dispatch(new FetchFail(error)));
+      .then(json => platform.cmd(new FetchSucceed(json.data.image_url)))
+      .catch(error => platform.cmd(new FetchFail(error)));
   };
 }

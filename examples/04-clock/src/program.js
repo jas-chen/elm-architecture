@@ -1,6 +1,10 @@
 import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
 
+function getTime() {
+  return (new Date()).getTime();
+}
+
 export const main = {
   init: init(),
   update,
@@ -10,7 +14,7 @@ export const main = {
 
 // MODEL
 function init() {
-  return (new Date()).getTime();
+  return getTime();
 }
 
 
@@ -28,9 +32,9 @@ function update(msg, model) {
 
 
 // SUBSCRIPTIONS
-function subscriptions(dispatch, model) {
+function subscriptions(platform, model) {
   setInterval(
-    () => dispatch(new Tick((new Date()).getTime())),
+    () => platform.cmd(new Tick(getTime())),
     1000
   );
 }

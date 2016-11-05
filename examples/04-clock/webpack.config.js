@@ -10,10 +10,5 @@ module.exports = {
     path: path.join(__dirname, "build"),
     filename: "main.js"
   },
-  devServer: { inline: true },
-  resolve: {
-    alias: {
-      // 'elm-architecture': path.resolve(__dirname, '../../src')
-    }
-  }
+  devServer: { inline: true }
 };
