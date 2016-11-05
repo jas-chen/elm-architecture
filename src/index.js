@@ -12,23 +12,16 @@ function isEvent(e) {
 }
 
 const hasRaf = typeof window !== 'undefined' && window.requestAnimationFrame;
-const hasCraf = hasRaf && window.cancelAnimationFrame;
 
 export function run(program, render, opt = {}) {
   const { init, view, update, subscriptions } = program.main;
   const { onUpdate } = opt;
   const msg$ = new Subject();
-  let initModel = init, rafVal, sideEffect;
+  let initModel = init, sideEffect;
 
   // Use requestAnimationFrame for better render performance
   const rafRender = hasRaf
-    ? vdom => {
-      hasCraf && rafVal && window.cancelAnimationFrame(rafVal);
-      rafVal = requestAnimationFrame(() => {
-        render(vdom);
-        rafVal = null;
-      })
-    }
+    ? vdom => requestAnimationFrame(() => render(vdom))
     : render;
 
   const platform = {
