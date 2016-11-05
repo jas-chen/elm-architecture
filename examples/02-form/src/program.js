@@ -1,4 +1,4 @@
-import { bindMsg } from 'elm-architecture';
+import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
 
 export const main = {
@@ -19,37 +19,29 @@ function init() {
 
 
 // Msg 
-function Name(name) {
-  this.payload = name;
-}
-
-function Password(password) {
-  this.payload = password;
-}
-
-function PasswordAgain(passwordAgain) {
-  this.payload = passwordAgain;
-}
-
-function RememberMe(rememberMe) {
-  this.payload = rememberMe;
-}
+function Name(name) { this.args = arguments; }
+function Password(password) { this.args = arguments; }
+function PasswordAgain(passwordAgain) { this.args = arguments; }
+function RememberMe(rememberMe) { this.args = arguments; }
 
 
 // UPDATE
-const assign = (model, partial) => Object.assign({}, model, partial);
+const a = (model, partial) => Object.assign({}, model, partial);
 
-function update({ constructor, payload }, model) {
-  switch (constructor) {
-    case Name:
-      return assign(model, { name: payload });
-    case Password:
-      return assign(model, { password: payload });
-    case PasswordAgain:
-      return assign(model, { passwordAgain: payload });
-    case RememberMe:
-      return assign(model, { rememberMe: payload });
-  }
+function update(msg, model) {
+  return caseOf(msg,
+    Name, name =>
+      a(model, { name }),
+
+    Password, password =>
+      a(model, { password }),
+
+    PasswordAgain, passwordAgain =>
+      a(model, { passwordAgain }),
+
+    RememberMe, rememberMe =>
+      a(model, { rememberMe }) 
+  );
 }
 
 

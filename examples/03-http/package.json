@@ -1,6 +1,6 @@
 {
   "name": "03-http",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Http example",
   "scripts": {
     "dev": "webpack-dev-server --inline --content-base .",
@@ -9,7 +9,7 @@
   "author": "Jas Chen",
   "license": "MIT",
   "dependencies": {
-    "elm-architecture": "0.3.0",
+    "elm-architecture": "0.3.2",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   },

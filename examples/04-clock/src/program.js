@@ -1,3 +1,4 @@
+import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
 
 export const main = {
@@ -14,17 +15,15 @@ function init() {
 
 
 // MSG
-function Tick(time) {
-  this.payload = time;
-}
+function Tick(time) { this.args = arguments; }
 
 
 // UPDATE
-function update({ constructor, payload }, model) {
-  switch (constructor) {
-    case Tick:
-      return payload;
-  }
+function update(msg, model) {
+  return caseOf(msg,
+    Tick, time =>
+      time
+  );
 }
 
 

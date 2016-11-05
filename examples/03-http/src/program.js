@@ -1,3 +1,4 @@
+import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
 
 export const main = {
@@ -8,35 +9,33 @@ export const main = {
 
 // MODEL
 function init(topic) {
-  const initModel = { topic, gifUrl: null };
+  const initModel = {
+    topic,
+    gifUrl: null
+  };
+
   return [initModel, getRandomGif(topic)];
 }
 
 
 // Msg 
-function MorePlease() {}
-
-function FetchSucceed(url) {
-  this.payload = url;
-}
-
-function FetchFail(error) {
-  this.payload = error;
-}
+function MorePlease() { this.args = arguments; }
+function FetchSucceed(gifUrl) { this.args = arguments; }
+function FetchFail(error) { this.args = arguments; }
 
 
 // UPDATE
-const assign = (model, partial) => Object.assign({}, model, partial);
+const a = (model, partial) => Object.assign({}, model, partial);
 
-function update({ constructor, payload }, model) {
-  switch (constructor) {
-    case MorePlease:
-      return [assign(model, { gifUrl: null }), getRandomGif(model.topic)];
-    case FetchSucceed:
-      return assign(model, { gifUrl: payload });
-    case FetchFail:
-      return model;
-  }
+function update(msg, model) {
+  return caseOf(msg,
+    MorePlease, () =>
+      [a(model, { gifUrl: null }), getRandomGif(model.topic)],
+    FetchSucceed, gifUrl =>
+      a(model, { gifUrl }),
+    FetchFail, () =>
+      model
+  );
 }
 
 

@@ -1,4 +1,4 @@
-import { run } from 'elm-architecture';
+import { run, logMsg } from 'elm-architecture';
 import ReactDom from 'react-dom';
 import * as program from './program';
 
@@ -7,7 +7,7 @@ function reactDomRender(mountNode) {
 }
 
 function log(msg, oldModel, newModel) {
-  console.info(msg);
+  logMsg(msg, 'info');
   console.log(oldModel);
   console.log(newModel);
 }

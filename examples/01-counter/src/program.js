@@ -1,3 +1,4 @@
+import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
 
 export const main = {
@@ -13,18 +14,18 @@ function init() {
 
 
 // MSG
-function Increment() {}
-function Decrement() {}
+function Increment() { this.args = arguments; }
+function Decrement() { this.args = arguments; }
 
 
 // UPDATE
 function update(msg, model) {
-  switch (msg.constructor) {
-    case Increment:
-      return model + 1;
-    case Decrement:
-      return model - 1;
-  }
+  return caseOf(msg,
+    Increment, () =>
+      model + 1,
+    Decrement, () =>
+      model - 1
+  );
 }
 
 
