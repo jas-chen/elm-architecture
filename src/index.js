@@ -7,12 +7,12 @@ function isEvent(e) {
 
 const hasRaf = typeof window !== 'undefined' && window.requestAnimationFrame;
 const hasCraf = hasRaf && window.cancelAnimationFrame;
-let rafVal;
 
 export function run(program, render, opt = {}) {
   const { init, view, update, subscriptions } = program.main;
   const { onUpdate } = opt;
   // Use requestAnimationFrame for better render performance
+  let rafVal;
   const rafRender = hasRaf
     ? vdom => {
       hasCraf && rafVal && window.cancelAnimationFrame(rafVal);
