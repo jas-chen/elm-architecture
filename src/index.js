@@ -22,7 +22,10 @@ export function run(program, render, opt = {}) {
   const rafRender = hasRaf
     ? vdom => {
       hasCraf && rafVal && window.cancelAnimationFrame(rafVal);
-      rafVal = requestAnimationFrame(() => render(vdom))
+      rafVal = requestAnimationFrame(() => {
+        render(vdom);
+        rafVal = null;
+      })
     }
     : render;
 
