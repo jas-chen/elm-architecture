@@ -17,8 +17,10 @@ const hasCraf = hasRaf && window.cancelAnimationFrame;
 export function run(program, render, opt = {}) {
   const { init, view, update, subscriptions } = program.main;
   const { onUpdate } = opt;
-  // Use requestAnimationFrame for better render performance
+  const msg$ = new Subject();
   let initModel = init, rafVal, sideEffect;
+
+  // Use requestAnimationFrame for better render performance
   const rafRender = hasRaf
     ? vdom => {
       hasCraf && rafVal && window.cancelAnimationFrame(rafVal);
@@ -29,7 +31,6 @@ export function run(program, render, opt = {}) {
     }
     : render;
 
-  const msg$ = new Subject();
   const platform = {
     cmd: msg$.next.bind(msg$),
     subscribe: msg$.subscribe.bind(msg$),
@@ -39,6 +40,7 @@ export function run(program, render, opt = {}) {
     }
   };
 
+  // alias
   platform.sub = platform.subscribe;
 
   if (typeof initModel === 'undefined') {
@@ -46,8 +48,7 @@ export function run(program, render, opt = {}) {
   }
 
   if (Array.isArray(initModel) && typeof initModel[1] === 'function') {
-    sideEffect = initModel[1];
-    initModel = initModel[0];
+    [initModel, sideEffect] = initModel;
   }
 
   const model$ = msg$
@@ -60,12 +61,10 @@ export function run(program, render, opt = {}) {
       }
 
       if (Array.isArray(newModel) && typeof newModel[1] === 'function') {
-        sideEffect = newModel[1];
-        newModel = newModel[0];
+        [newModel, sideEffect] = newModel;
       }
 
       onUpdate && onUpdate(msg, model, newModel);
-
       return newModel;
     })
     ._do(() => {
@@ -118,6 +117,7 @@ export function caseOf(msg, ...params) {
     }
   }
 }
+
 
 // https://davidwalsh.name/javascript-arguments
 function getArgsNames(func) {
