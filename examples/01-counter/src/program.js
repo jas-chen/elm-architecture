@@ -14,8 +14,8 @@ function init() {
 
 
 // MSG
-function Increment() { this.args = arguments; }
-function Decrement() { this.args = arguments; }
+function Increment() {}
+function Decrement() {}
 
 
 // UPDATE

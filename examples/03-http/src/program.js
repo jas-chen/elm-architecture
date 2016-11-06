@@ -1,5 +1,6 @@
 import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
+const { assign } = Object;
 
 export const main = {
   init: init('cats'),
@@ -19,19 +20,25 @@ function init(topic) {
 
 
 // Msg 
-function MorePlease() { this.args = arguments; }
-function FetchSucceed(gifUrl) { this.args = arguments; }
-function FetchFail(error) { this.args = arguments; }
+function MorePlease() {}
+
+function FetchSucceed(gifUrl) {
+  assign(this, { gifUrl });
+}
+
+function FetchFail(error) {
+  assign(this, { error });
+}
 
 
 // UPDATE
-const a = (model, partial) => Object.assign({}, model, partial);
+const a = (model, partial) => assign({}, model, partial);
 
 function update(msg, model) {
   return caseOf(msg,
     MorePlease, () =>
       [a(model, { gifUrl: null }), getRandomGif(model.topic)],
-    FetchSucceed, gifUrl =>
+    FetchSucceed, ({ gifUrl }) =>
       a(model, { gifUrl }),
     FetchFail, () =>
       model

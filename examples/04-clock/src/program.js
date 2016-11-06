@@ -1,5 +1,6 @@
 import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
+const { assign } = Object;
 
 function getTime() {
   return (new Date()).getTime();
@@ -19,13 +20,15 @@ function init() {
 
 
 // MSG
-function Tick(time) { this.args = arguments; }
+function Tick(time) {
+  assign(this, { time });
+}
 
 
 // UPDATE
 function update(msg, model) {
   return caseOf(msg,
-    Tick, time =>
+    Tick, ({ time }) =>
       time
   );
 }

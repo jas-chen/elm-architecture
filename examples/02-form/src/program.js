@@ -1,5 +1,6 @@
 import { caseOf } from 'elm-architecture';
 import { createElement as h } from 'react';
+const { assign } = Object;
 
 export const main = {
   init: init(),
@@ -19,27 +20,38 @@ function init() {
 
 
 // Msg 
-function Name(name) { this.args = arguments; }
-function Password(password) { this.args = arguments; }
-function PasswordAgain(passwordAgain) { this.args = arguments; }
-function RememberMe(rememberMe) { this.args = arguments; }
+function Name(name) {
+  assign(this, { name });
+}
+
+function Password(password) {
+  assign(this, { password });
+}
+
+function PasswordAgain(passwordAgain) {
+  assign(this, { passwordAgain });
+}
+
+function RememberMe(rememberMe) {
+  assign(this, { rememberMe });
+}
 
 
 // UPDATE
-const a = (model, partial) => Object.assign({}, model, partial);
+const a = (model, partial) => assign({}, model, partial);
 
 function update(msg, model) {
   return caseOf(msg,
-    Name, name =>
+    Name, ({ name }) =>
       a(model, { name }),
 
-    Password, password =>
+    Password, ({ password }) =>
       a(model, { password }),
 
-    PasswordAgain, passwordAgain =>
+    PasswordAgain, ({ passwordAgain }) =>
       a(model, { passwordAgain }),
 
-    RememberMe, rememberMe =>
+    RememberMe, ({ rememberMe }) =>
       a(model, { rememberMe }) 
   );
 }
