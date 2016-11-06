@@ -4,7 +4,6 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 
 function isEvent(e) {
@@ -27,7 +26,6 @@ export function run(program, render, opt = {}) {
   const platform = {
     cmd: msg$.next.bind(msg$),
     subscribe: msg$.subscribe.bind(msg$),
-    complete: msg$.complete.bind(msg$),
     [$$observable]() {
       return platform;
     }
@@ -63,8 +61,7 @@ export function run(program, render, opt = {}) {
     ._do(() => {
       sideEffect && sideEffect(platform);
       sideEffect = null;
-    })
-    .share();
+    });
 
   let view$ = view(dispatch, model$);
   if (typeof view$ === 'function') {
@@ -96,7 +93,7 @@ export function run(program, render, opt = {}) {
 
   return {
     platform,
-    model$
+    terminate: msg$.complete.bind(msg$)
   };
 }
 
