@@ -13,6 +13,7 @@ export const main = {
   view
 };
 
+
 // MODEL
 function init() {
   return getTime();
@@ -35,9 +36,9 @@ function update(msg, model) {
 
 
 // SUBSCRIPTIONS
-function subscriptions(platform, model) {
+function subscriptions(d, model) {
   setInterval(
-    () => platform.cmd(new Tick(getTime())),
+    () => d(new Tick(getTime())),
     1000
   );
 }

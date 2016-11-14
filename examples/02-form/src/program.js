@@ -1,12 +1,12 @@
-import { caseOf } from 'elm-architecture';
+import { caseOf, assignArgs } from 'elm-architecture';
 import { createElement as h } from 'react';
-const { assign } = Object;
 
 export const main = {
   init: init(),
   update,
   view
 };
+
 
 // MODEL
 function init() {
@@ -20,25 +20,17 @@ function init() {
 
 
 // Msg 
-function Name(name) {
-  assign(this, { name });
-}
+function Name(name) { assignArgs(this, arguments); }
 
-function Password(password) {
-  assign(this, { password });
-}
+function Password(password) { assignArgs(this, arguments); }
 
-function PasswordAgain(passwordAgain) {
-  assign(this, { passwordAgain });
-}
+function PasswordAgain(passwordAgain) { assignArgs(this, arguments); }
 
-function RememberMe(rememberMe) {
-  assign(this, { rememberMe });
-}
+function RememberMe(rememberMe) { assignArgs(this, arguments); }
 
 
 // UPDATE
-const a = (model, partial) => assign({}, model, partial);
+const a = (model, partial) => Object.assign({}, model, partial);
 
 function update(msg, model) {
   return caseOf(msg,

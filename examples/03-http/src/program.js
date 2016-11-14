@@ -1,6 +1,5 @@
-import { caseOf } from 'elm-architecture';
+import { caseOf, assignArgs } from 'elm-architecture';
 import { createElement as h } from 'react';
-const { assign } = Object;
 
 export const main = {
   init: init('cats'),
@@ -22,22 +21,21 @@ function init(topic) {
 // Msg 
 function MorePlease() {}
 
-function FetchSucceed(gifUrl) {
-  assign(this, { gifUrl });
-}
+function FetchSucceed(gifUrl) { assignArgs(this, arguments); }
 
-function FetchFail(error) {
-  assign(this, { error });
-}
+function FetchFail(error) { assignArgs(this, arguments); }
 
 
 // UPDATE
-const a = (model, partial) => assign({}, model, partial);
+const a = (model, partial) => Object.assign({}, model, partial);
 
 function update(msg, model) {
   return caseOf(msg,
     MorePlease, () =>
-      [a(model, { gifUrl: null }), getRandomGif(model.topic)],
+      [
+        a(model, { gifUrl: null }),
+        getRandomGif(model.topic)
+      ],
     FetchSucceed, ({ gifUrl }) =>
       a(model, { gifUrl }),
     FetchFail, () =>
@@ -61,10 +59,11 @@ function view(d) {
 
 // HTTP
 function getRandomGif(topic) {
-  return platform => {
+  return d => {
     fetch(`http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${topic}`)
       .then(response => response.json())
-      .then(json => platform.cmd(new FetchSucceed(json.data.image_url)))
-      .catch(error => platform.cmd(new FetchFail(error)));
+      .then(json => json.data.image_url)
+      .then(d(FetchSucceed))
+      .catch(d(FetchFail));
   };
 }

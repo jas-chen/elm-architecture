@@ -555,9 +555,9 @@ elliptic@^6.0.0:
     hash.js "^1.0.0"
     inherits "^2.0.1"
 
-elm-architecture@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/elm-architecture/-/elm-architecture-0.5.0.tgz#fca7bd657bdfeb7343b84b30d780e55d8db666f9"
+elm-architecture@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/elm-architecture/-/elm-architecture-0.6.0.tgz#003d6cc8b23c6cfaea5a5f7ad3f4ccfe61312187"
   dependencies:
     rxjs "^5.0.0-rc.1"
 
