@@ -10,29 +10,13 @@ function isEvent(e) {
   return e && e.preventDefault && e.stopPropagation;
 }
 
-const hasRaf = typeof window !== 'undefined' && window.requestAnimationFrame;
-
-export function run(program, render, opt = {}) {
-  const { init, view, update, subscriptions } = program.main;
-  const { onUpdate } = opt;
+export function run(program, options = {}) {
+  const { init, view, update } = program.main;
+  const { onMsg, onModel, onView } = options;
   const msg$ = new Subject();
-  let initModel = init, sideEffect;
-
-  // Use requestAnimationFrame for better render performance
-  const rafRender = hasRaf
-    ? vdom => requestAnimationFrame(() => render(vdom))
-    : render;
-
-  const platform = {
-    cmd: msg$.next.bind(msg$),
-    subscribe: msg$.subscribe.bind(msg$),
-    [$$observable]() {
-      return platform;
-    }
-  };
-
-  // alias
-  platform.sub = platform.subscribe;
+  let { subscriptions } = program.main;
+  let initModel = init;
+  let sideEffect;
 
   if (typeof initModel === 'undefined') {
     throw new Error('Initial model is undefined. Pass null to explicitly set `no value`.');
@@ -45,6 +29,11 @@ export function run(program, render, opt = {}) {
   const model$ = msg$
     .startWith(initModel)
     .scan((model, msg) => {
+      if (typeof msg !== 'object') {
+        throw new Error(`Expected msg to be an object.`);
+      }
+
+      onMsg && onMsg(msg);
       let newModel = update(msg, model);
 
       if (typeof newModel === 'undefined') {
@@ -54,13 +43,21 @@ export function run(program, render, opt = {}) {
       if (Array.isArray(newModel) && typeof newModel[1] === 'function') {
         [newModel, sideEffect] = newModel;
       }
-
-      onUpdate && onUpdate(msg, model, newModel);
+      
       return newModel;
     })
-    ._do(() => {
-      sideEffect && sideEffect(platform);
-      sideEffect = null;
+    ._do(model => {
+      onModel && onModel(model);
+
+      if (subscriptions) {
+        subscriptions(dispatch, initModel);
+        subscriptions = null;
+      }
+      
+      if (sideEffect) {
+        sideEffect(dispatch);
+        sideEffect = null;
+      }
     });
 
   let view$ = view(dispatch, model$);
@@ -68,9 +65,7 @@ export function run(program, render, opt = {}) {
     view$ = model$.map(view$);
   }
 
-  view$.subscribe(rafRender);
-
-  subscriptions && subscriptions(platform, initModel);
+  view$.subscribe(onView);
 
   function dispatch(msg, ...args) {
     if (typeof msg === 'function') {
@@ -83,7 +78,7 @@ export function run(program, render, opt = {}) {
             msg$.next(new msg(...args, target.value));
           }
         } else {
-          msg$.next(new msg(...args));
+          msg$.next(new msg(...arguments));
         }
       }
     }
@@ -92,8 +87,8 @@ export function run(program, render, opt = {}) {
   }
 
   return {
-    platform,
-    terminate: msg$.complete.bind(msg$)
+    dispatch,
+    abort: msg$.complete.bind(msg$)
   };
 }
 
@@ -106,4 +101,20 @@ export function caseOf(msg, ...params) {
       return update(msg);
     }
   }
+}
+
+
+export function assignArgs(instance, args) {
+  // https://davidwalsh.name/javascript-arguments
+  const argNames = instance
+    .constructor
+    .toString()
+    .match(/function\s.*?\(([^)]*)\)/)[1]
+    .split(',')
+    .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
+    .filter(arg => arg);
+
+  const argMap = {};
+  argNames.forEach((n, i) => argMap[n] = args[i]);
+  Object.assign(instance, argMap);
 }
