@@ -1,4 +1,4 @@
-import { caseOf } from 'elm-architecture';
+import { caseOf, assignArgs } from 'elm-architecture';
 import { createElement as h } from 'react';
 const { assign } = Object;
 
@@ -21,9 +21,7 @@ function init() {
 
 
 // MSG
-function Tick(time) {
-  assign(this, { time });
-}
+function Tick(time) { assignArgs(this, arguments); }
 
 
 // UPDATE
@@ -37,10 +35,7 @@ function update(msg, model) {
 
 // SUBSCRIPTIONS
 function subscriptions(d, model) {
-  setInterval(
-    () => d(new Tick(getTime())),
-    1000
-  );
+  Time.every(SECOND)(d(Tick));
 }
 
 
@@ -48,4 +43,12 @@ function subscriptions(d, model) {
 function view(d) {
   return model =>
     h('p', null, (new Date(model)).toLocaleString());
+}
+
+
+// Time
+const SECOND = 1000;
+
+const Time = {
+  every: interval => cb => setInterval(() => cb(getTime()), interval)
 }
