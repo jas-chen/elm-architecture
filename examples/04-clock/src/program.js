@@ -35,7 +35,11 @@ function update(msg, model) {
 
 // SUBSCRIPTIONS
 function subscriptions(d, model) {
-  Time.every(SECOND)(d(Tick));
+  const intervalId = Time.every(SECOND)(d(Tick));
+
+  return function cancelSubscription() {
+    clearInterval(intervalId);
+  }
 }
 
 
@@ -50,5 +54,5 @@ function view(d) {
 const SECOND = 1000;
 
 const Time = {
-  every: interval => cb => setInterval(() => cb(getTime()), interval)
+  every: interval => cb => setInterval(() => { cb(getTime()); console.log(5566); }, interval)
 }
