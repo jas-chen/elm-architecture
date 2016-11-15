@@ -104,15 +104,25 @@ export function caseOf(msg, ...params) {
 }
 
 
+const argNameCache = [];
+
 export function assignArgs(instance, args) {
-  // https://davidwalsh.name/javascript-arguments
-  const argNames = instance
-    .constructor
-    .toString()
-    .match(/function\s.*?\(([^)]*)\)/)[1]
-    .split(',')
-    .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
-    .filter(arg => arg);
+  let argNames = argNameCache.find(c => c.msg === instance.constructor);
+
+  if (argNames) {
+    argNames = argNames.argNames;
+  } else {
+    // https://davidwalsh.name/javascript-arguments
+    argNames = instance
+      .constructor
+      .toString()
+      .match(/function\s.*?\(([^)]*)\)/)[1]
+      .split(',')
+      .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
+      .filter(arg => arg);
+
+    argNameCache.push({ msg: instance.constructor, argNames });
+  }
 
   const argMap = {};
   argNames.forEach((n, i) => argMap[n] = args[i]);
