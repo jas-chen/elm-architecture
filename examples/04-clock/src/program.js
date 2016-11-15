@@ -54,5 +54,5 @@ function view(d) {
 const SECOND = 1000;
 
 const Time = {
-  every: interval => cb => setInterval(() => { cb(getTime()); console.log(5566); }, interval)
+  every: interval => cb => setInterval(() => cb(getTime()), interval)
 }
