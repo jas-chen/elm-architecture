@@ -17,6 +17,7 @@ export function run(program, options = {}) {
   let { subscriptions } = program.main;
   let initModel = init;
   let sideEffect;
+  let cancelSubscriptions;
 
   if (typeof initModel === 'undefined') {
     throw new Error('Initial model is undefined. Pass null to explicitly set `no value`.');
@@ -50,7 +51,7 @@ export function run(program, options = {}) {
       onModel && onModel(model);
 
       if (subscriptions) {
-        subscriptions(dispatch, initModel);
+        cancelSubscriptions = subscriptions(dispatch, initModel);
         subscriptions = null;
       }
       
@@ -88,7 +89,11 @@ export function run(program, options = {}) {
 
   return {
     dispatch,
-    abort: msg$.complete.bind(msg$)
+    abort() {
+      cancelSubscriptions && cancelSubscriptions();
+      cancelSubscriptions = null;
+      msg$.complete();
+    }
   };
 }
 
