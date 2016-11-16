@@ -10,11 +10,11 @@ function isEvent(e) {
   return e && e.preventDefault && e.stopPropagation;
 }
 
-export function run(program, options = {}) {
-  const { init, view, update } = program.main;
+export function run(app, options = {}) {
+  const { init, view, update } = app.main;
   const { onMsg, onModel, onView } = options;
   const msg$ = new Subject();
-  let { subscriptions } = program.main;
+  let { subscriptions } = app.main;
   let initModel = init;
   let sideEffect;
   let cancelSubscriptions;
