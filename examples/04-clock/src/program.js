@@ -1,10 +1,15 @@
 import { caseOf, assignArgs } from 'elm-architecture';
 import { createElement as h } from 'react';
-const { assign } = Object;
 
-function getTime() {
-  return (new Date()).getTime();
-}
+// Time
+const SECOND = 1000;
+
+const Time = {
+  getTime: () => (new Date()).getTime(),
+  every: interval => cb => setInterval(() => cb(Time.getTime()), interval),
+  toLocaleString: time => (new Date(time)).toLocaleString()
+};
+
 
 export const main = {
   init: init(),
@@ -16,7 +21,7 @@ export const main = {
 
 // MODEL
 function init() {
-  return getTime();
+  return Time.getTime();
 }
 
 
@@ -46,13 +51,5 @@ function subscriptions(d, model) {
 // VIEW
 function view(d) {
   return model =>
-    h('p', null, (new Date(model)).toLocaleString());
-}
-
-
-// Time
-const SECOND = 1000;
-
-const Time = {
-  every: interval => cb => setInterval(() => cb(getTime()), interval)
+    h('p', null, Time.toLocaleString(model));
 }
