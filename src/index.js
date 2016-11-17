@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 function isEvent(e) {
@@ -59,7 +60,8 @@ export function run(app, options = {}) {
         sideEffect(dispatch);
         sideEffect = null;
       }
-    });
+    })
+    .distinctUntilChanged();
 
   let view$ = view(dispatch, model$);
   if (typeof view$ === 'function') {
