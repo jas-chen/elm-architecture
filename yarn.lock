@@ -1388,9 +1388,9 @@ rimraf@^2.5.4, rimraf@~2.5.1, rimraf@~2.5.4, rimraf@2:
   dependencies:
     glob "^7.0.5"
 
-rxjs@^5.0.0-rc.1:
-  version "5.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.0-rc.1.tgz#9e02b7044da81a2d5e138908d22af77e22d96973"
+rxjs:
+  version "5.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.0-rc.3.tgz#d8bc390d83277846b2d2afa1acf3c5f4f114a8d5"
   dependencies:
     symbol-observable "^1.0.1"
 
