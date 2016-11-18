@@ -1,7 +1,5 @@
-import { assignArgs } from 'elm-architecture';
-
-export function Ok(value) { assignArgs(this, arguments); }
-export function Err(reason) { assignArgs(this, arguments); }
+export function Ok(value) { this.value = value; }
+export function Err(error) { this.error = error; }
 
 export function send(Msg, request) {
   return dispatch =>
