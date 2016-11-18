@@ -1,15 +1,6 @@
 import { caseOf, assignArgs } from 'elm-architecture';
 import { createElement as h } from 'react';
-
-// Time
-const SECOND = 1000;
-
-const Time = {
-  getTime: () => (new Date()).getTime(),
-  every: interval => cb => setInterval(() => cb(Time.getTime()), interval),
-  toLocaleString: time => (new Date(time)).toLocaleString()
-};
-
+import { SECOND, Time } from './Time';
 
 export const main = {
   init: init(),

@@ -6,7 +6,7 @@ const mountNode = document.getElementById('root');
 const render = vdom => ReactDom.render(vdom, mountNode);
 
 run(app, {
-  onMsg: console.info,
-  onModel: console.log,
+  onMsg: msg => console.info(msg),
+  onModel: model => console.log(model),
   onView: render
 });
