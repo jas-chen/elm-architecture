@@ -1,5 +1,4 @@
-export function Ok(value) { this.value = value; }
-export function Err(error) { this.error = error; }
+import { Ok, Err } from './Result';
 
 export function send(Msg, request) {
   return dispatch =>

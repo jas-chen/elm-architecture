@@ -1,8 +1,7 @@
 import { caseOf, assignArgs } from 'elm-architecture';
 import { createElement as h } from 'react';
 import * as Http from './Http';
-
-const { Ok, Err } = Http;
+import { Ok, Err } from './Result';
 
 export const main = {
   init: init('cats'),
