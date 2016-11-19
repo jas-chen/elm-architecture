@@ -32,9 +32,9 @@ function update(msg, model) {
 // VIEW
 function view(d) {
   return model =>
-    h('p', null,
-      `Clicked: ${model} times`,
-      h('button', { onClick: d(Increment) }, '+'),
-      h('button', { onClick: d(Decrement) }, '-')
+    h('div', null,
+      h('button', { onClick: d(Decrement) }, '-'),
+      h('div', null, model),
+      h('button', { onClick: d(Increment) }, '+')
     );
 }
